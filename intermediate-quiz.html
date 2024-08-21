@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intermediate Level - Space Quiz Competition</title>
+    <style>
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-image: url('intermediate-quiz.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Headers */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+
+        /* Score and Progress Panels */
+        .score-panel, .progress-container, .timer {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        /* Question and Options */
+        .question-container {
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .option:hover {
+            background-color: #ffcc00;
+            color: black;
+            transform: scale(1.05);
+        }
+
+        /* Control Buttons */
+        .controls-container {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* Feedback */
+        .feedback {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>🌟 Welcome to Intermediate Level! 🌟</h1>
+        <p>Brace yourself for a deeper dive into the wonders of the cosmos!</p>
+
+
+        <div id="question" class="question-container"></div>
+
+        <div class="options-container"></div>
+
+        <div class="controls-container">
+            <button id="skipBtn">Skip</button>
+            <button id="nextBtn">Next</button>
+            <button id="completeBtn" style="display:none;"><a href="score-card2.html">Complete</a></button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+
+        <div class="score-panel">Score: <span id="score">0</span></div>
+        <div class="timer">Time Left: <span id="timer">10</span> seconds</div>
+    </div>
+
+    <script>
+        const questions = [
+    {
+        question: "What is the name of the first human to journey into outer space?",
+        options: ["Yuri Gagarin", "Neil Armstrong", "Buzz Aldrin", "Alan Shepard"],
+        answer: "Yuri Gagarin",
+        explanation: "Yuri Gagarin was the first human to journey into outer space, orbiting the Earth on April 12, 1961."
+    },
+    {
+        question: "Which planet in our Solar System has the shortest day?",
+        options: ["Earth", "Jupiter", "Mars", "Saturn"],
+        answer: "Jupiter",
+        explanation: "Jupiter has the shortest day of all the planets, with a rotation period of just about 10 hours."
+    },
+    {
+        question: "What is the main component of the Sun?",
+        options: ["Oxygen", "Carbon", "Hydrogen", "Helium"],
+        answer: "Hydrogen",
+        explanation: "The Sun is composed mainly of hydrogen, which it fuses into helium in its core through nuclear fusion."
+    },
+    {
+        question: "Which spacecraft was the first to land on the Moon?",
+        options: ["Luna 2", "Apollo 11", "Sputnik 1", "Vostok 1"],
+        answer: "Apollo 11",
+        explanation: "Apollo 11 was the first spacecraft to land on the Moon, with Neil Armstrong and Buzz Aldrin walking on the lunar surface in 1969."
+    },
+    {
+        question: "Which planet has a day that is longer than its year?",
+        options: ["Venus", "Mercury", "Mars", "Pluto"],
+        answer: "Venus",
+        explanation: "Venus has a day that is longer than its year due to its slow rotation, taking 243 Earth days to complete one rotation."
+    },
+    {
+        question: "What is the largest dwarf planet in our Solar System?",
+        options: ["Pluto", "Eris", "Ceres", "Haumea"],
+        answer: "Eris",
+        explanation: "Eris is the largest known dwarf planet in the Solar System, slightly larger than Pluto."
+    },
+    {
+        question: "Which planet is known as Earth's 'sister planet' due to its similar size and composition?",
+        options: ["Mars", "Venus", "Mercury", "Neptune"],
+        answer: "Venus",
+        explanation: "Venus is often called Earth's 'sister planet' due to its similar size, mass, and composition, although its surface conditions are vastly different."
+    },
+    {
+        question: "Which moon is the only one known to have a dense atmosphere?",
+        options: ["Titan", "Europa", "Ganymede", "Callisto"],
+        answer: "Titan",
+        explanation: "Titan, Saturn's largest moon, is the only moon known to have a dense atmosphere, composed mostly of nitrogen."
+    },
+    {
+        question: "What is the name of the boundary around a black hole beyond which nothing can escape?",
+        options: ["Event Horizon", "Singularity", "Accretion Disk", "Schwarzschild Radius"],
+        answer: "Event Horizon",
+        explanation: "The event horizon is the boundary around a black hole beyond which nothing, not even light, can escape."
+    },
+    {
+        question: "Which planet was demoted from its status as a planet and is now classified as a dwarf planet?",
+        options: ["Neptune", "Uranus", "Pluto", "Ceres"],
+        answer: "Pluto",
+        explanation: "Pluto was reclassified as a dwarf planet in 2006 by the International Astronomical Union."
+    }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const questionData = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = questionData.question;
+
+            const optionsContainer = document.querySelector('.options-container');
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(optionElement);
+            });
+
+            document.getElementById('feedback').style.display = 'none';
+            startTimer();
+
+            document.getElementById('completeBtn').style.display = currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+            document.getElementById('score').textContent = score;
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentQuestionIndex].answer;
+            const feedback = document.getElementById('feedback');
+            clearInterval(timer);
+
+            if (selectedOption === correctAnswer) {
+                score++;
+                feedback.innerHTML = `<p>Correct! ${questions[currentQuestionIndex].explanation}</p>`;
+            } else {
+                feedback.innerHTML = `<p>Wrong! The correct answer is <strong>${correctAnswer}</strong>. ${questions[currentQuestionIndex].explanation}</p>`;
+            }
+
+            feedback.style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function skipQuestion() {
+            nextQuestion();
+        }
+
+        function startTimer() {
+            let timeLeft = 10;
+            document.getElementById('timer').textContent = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function showResults() {
+            alert(`Quiz completed! Your score is: ${score}`);
+            // Redirect to score page or display results
+        }
+
+        document.getElementById('nextBtn').onclick = nextQuestion;
+        document.getElementById('skipBtn').onclick = skipQuestion;
+        document.getElementById('completeBtn').onclick = showResults;
+
+        loadQuestion();
+    </script>
+</body>
+</html>

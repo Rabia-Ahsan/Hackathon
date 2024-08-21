@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Card</title>
+    <style>
+        body{
+            background-image: url('score.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+        }
+        .score-card-container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            color: #fff;
+            margin: 50px auto;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .score {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+
+        .result {
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #e94560;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #ff2b5b;
+        }
+    </style>
+</head>
+<body>
+    <div class="score-card-container">
+        <h1>Thank You for Participating!</h1>
+        <div class="score">
+            Your Score: <span id="score"></span>/10
+        </div>
+        <div class="result" id="result"></div>
+        <button onclick="restartQuiz()">Try Again</button>
+    </div>
+    <script>
+        function displayScore() {
+            const score = localStorage.getItem('score') || 0;
+            document.getElementById('score').textContent = score;
+            
+            let resultText;
+            if (score === '10') {
+                resultText = "Fantastic! You nailed the quiz!";
+            } else if (score >= '8') {
+                resultText = "Well done! You've got a strong grasp on space!";
+            } else if (score >= '6') {
+                resultText = "Nice attempt! You know quite a bit about space!";
+            } else {
+                resultText = "Keep exploring! Practice makes perfect!";
+            }
+            document.getElementById('result').textContent = resultText;
+        }
+
+        function restartQuiz() {
+            localStorage.removeItem('currentQuestionIndex');
+            localStorage.removeItem('score');
+            window.location.href = 'index.html';
+        }
+
+        displayScore();
+    </script>
+</body>
+</html>

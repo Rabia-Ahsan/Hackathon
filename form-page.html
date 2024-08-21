@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Quiz Competition - Registration</title>
+    <link rel="stylesheet" href="form-page.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Space Quiz Competition</h1>
+        <p>Enter your details to join the ultimate space quiz challenge!</p>
+        <form id="registrationForm">
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="Your full name">
+            </div>
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Your email address">
+            </div>
+            <div class="input-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required placeholder="Your age">
+            </div>
+            <div class="input-group">
+                <label for="favPlanet">Favorite Planet</label>
+                <select id="favPlanet" name="favPlanet" required>
+                    <option value="">Select your favorite planet</option>
+                    <option value="Mercury">Mercury</option>
+                    <option value="Venus">Venus</option>
+                    <option value="Earth">Earth</option>
+                    <option value="Mars">Mars</option>
+                    <option value="Jupiter">Jupiter</option>
+                    <option value="Saturn">Saturn</option>
+                    <option value="Uranus">Uranus</option>
+                    <option value="Neptune">Neptune</option>
+                </select>
+            </div>
+            <button type="submit"><a href="start.html">Join the Mission</a></button>
+        </form>
+    </div>
+
+    <script src="form-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Level - Space Quiz Competition</title>
+    <style>
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-image: url('easy-quiz.jpg'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Headers */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+
+        /* Score and Progress Panels */
+        .score-panel, .progress-container, .timer {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        /* Question and Options */
+        .question-container {
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .option:hover {
+            background-color: #ffcc00;
+            color: black;
+            transform: scale(1.05);
+        }
+
+        /* Control Buttons */
+        .controls-container {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* Feedback */
+        .feedback {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>🌟 Welcome to the Easy Level! 🌟</h1>
+        <p>Get ready to embark on your first adventure in the cosmos!</p>
+
+        <div id="question" class="question-container"></div>
+
+        <div class="options-container"></div>
+
+        <div class="controls-container">
+            <button id="skipBtn">Skip</button>
+            <button id="nextBtn">Next</button>
+            <button id="completeBtn" style="display:none;"><a href="score-card.html">Complete</a></button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+
+        <div class="score-panel">Score: <span id="score">0</span></div>
+        <div class="timer">Time Left: <span id="timer">10</span> seconds</div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the largest planet in our Solar System?",
+                options: ["Earth", "Jupiter", "Mars", "Saturn"],
+                answer: "Jupiter",
+                explanation: "Jupiter is the largest planet in our Solar System, with a diameter of about 86,881 miles (139,822 kilometers)."
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Venus", "Earth", "Mars", "Mercury"],
+                answer: "Mars",
+                explanation: "Mars is called the Red Planet because of its reddish appearance, which is due to iron oxide (rust) on its surface."
+            },
+            {
+        question: "What is the closest star to Earth?",
+        options: ["Sirius", "Proxima Centauri", "Alpha Centauri", "Betelgeuse"],
+        answer: "Proxima Centauri",
+        explanation: "Proxima Centauri is the closest known star to the Sun, located approximately 4.24 light-years away."
+    },
+    {
+        question: "Which planet has the most extensive rings?",
+        options: ["Jupiter", "Saturn", "Uranus", "Neptune"],
+        answer: "Saturn",
+        explanation: "Saturn has the most prominent and complex ring system of any planet in the Solar System."
+    },
+    {
+        question: "What is the hottest planet in our Solar System?",
+        options: ["Mercury", "Venus", "Mars", "Jupiter"],
+        answer: "Venus",
+        explanation: "Venus is the hottest planet due to its thick atmosphere of carbon dioxide, which traps heat through the greenhouse effect."
+    },
+    {
+        question: "Which planet is known for its Great Red Spot?",
+        options: ["Earth", "Mars", "Jupiter", "Saturn"],
+        answer: "Jupiter",
+        explanation: "Jupiter’s Great Red Spot is a massive storm that has been ongoing for over 350 years."
+    },
+    {
+        question: "What is the largest moon of Saturn called?",
+        options: ["Titan", "Ganymede", "Callisto", "Io"],
+        answer: "Titan",
+        explanation: "Titan is Saturn's largest moon and is even larger than the planet Mercury."
+    },
+    {
+        question: "Which planet is known for its extreme tilt, causing extreme seasons?",
+        options: ["Mars", "Uranus", "Neptune", "Saturn"],
+        answer: "Uranus",
+        explanation: "Uranus has an axial tilt of 98 degrees, causing extreme seasonal variations."
+    },
+    {
+        question: "Which planet is famous for its blue color?",
+        options: ["Neptune", "Uranus", "Earth", "Venus"],
+        answer: "Neptune",
+        explanation: "Neptune is known for its striking blue color, which is due to the presence of methane in its atmosphere."
+    },
+    {
+        question: "What is the name of the first human-made satellite to orbit Earth?",
+        options: ["Apollo 11", "Voyager 1", "Sputnik 1", "Hubble Space Telescope"],
+        answer: "Sputnik 1",
+        explanation: "Sputnik 1 was the first artificial Earth satellite, launched by the Soviet Union in 1957."
+    }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const questionData = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = questionData.question;
+
+            const optionsContainer = document.querySelector('.options-container');
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(optionElement);
+            });
+
+            document.getElementById('feedback').style.display = 'none';
+            startTimer();
+
+            document.getElementById('completeBtn').style.display = currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+            document.getElementById('score').textContent = score;
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentQuestionIndex].answer;
+            const feedback = document.getElementById('feedback');
+            clearInterval(timer);
+
+            if (selectedOption === correctAnswer) {
+                score++;
+                feedback.innerHTML = `<p>Correct! ${questions[currentQuestionIndex].explanation}</p>`;
+            } else {
+                feedback.innerHTML = `<p>Wrong! The correct answer is <strong>${correctAnswer}</strong>. ${questions[currentQuestionIndex].explanation}</p>`;
+            }
+
+            feedback.style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function skipQuestion() {
+            nextQuestion();
+        }
+
+        function startTimer() {
+            let timeLeft = 10;
+            document.getElementById('timer').textContent = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function showResults() {
+            alert(`Quiz completed! Your score is: ${score}`);
+            // Redirect to score page or display results
+        }
+
+        document.getElementById('nextBtn').onclick = nextQuestion;
+        document.getElementById('skipBtn').onclick = skipQuestion;
+        document.getElementById('completeBtn').onclick = showResults;
+
+        loadQuestion();
+    </script>
+</body>
+</html>

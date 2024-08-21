@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Level - Space Quiz Competition</title>
+    <style>
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-image: url('hard-quiz.jpg'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Headers */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+
+        /* Score and Progress Panels */
+        .score-panel, .progress-container, .timer {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        /* Question and Options */
+        .question-container {
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .option:hover {
+            background-color: #ffcc00;
+            color: black;
+            transform: scale(1.05);
+        }
+
+        /* Control Buttons */
+        .controls-container {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* Feedback */
+        .feedback {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>🌟 Welcome to Hard Level! 🌟</h1>
+        <p>Prepare to push the boundaries of your cosmic knowledge in this ultimate space challenge!</p>
+
+
+        <div id="question" class="question-container"></div>
+
+        <div class="options-container"></div>
+
+        <div class="controls-container">
+            <button id="skipBtn">Skip</button>
+            <button id="nextBtn">Next</button>
+            <button id="completeBtn" style="display:none;"><a href="score-card3.html">Complete</a></button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+
+        <div class="score-panel">Score: <span id="score">0</span></div>
+        <div class="timer">Time Left: <span id="timer">10</span> seconds</div>
+    </div>
+
+    <script>
+        const questions = [
+        {
+    "question": "What is the most abundant element in the universe?",
+    "options": ["Oxygen", "Carbon", "Hydrogen", "Helium"],
+    "answer": "Hydrogen",
+    "explanation": "Hydrogen is the most abundant element, making up about 75% of the universe’s elemental mass."
+},
+{
+    "question": "Which moon is the only one known to have a substantial atmosphere?",
+    "options": ["Europa", "Titan", "Ganymede", "Io"],
+    "answer": "Titan",
+    "explanation": "Titan, Saturn's largest moon, has a dense atmosphere primarily composed of nitrogen."
+},
+{
+    "question": "What is the name of the boundary around a black hole beyond which nothing can escape?",
+    "options": ["Event Horizon", "Schwarzschild Radius", "Singularity", "Photon Sphere"],
+    "answer": "Event Horizon",
+    "explanation": "The event horizon is the boundary around a black hole beyond which no light or other information can escape."
+},
+{
+    "question": "Which spacecraft was the first to visit Neptune?",
+    "options": ["Voyager 1", "Voyager 2", "Pioneer 10", "Galileo"],
+    "answer": "Voyager 2",
+    "explanation": "Voyager 2 flew by Neptune in 1989, providing the first close-up images of the planet."
+},
+{
+    "question": "What phenomenon causes the apparent backward movement of planets as observed from Earth?",
+    "options": ["Retrograde Motion", "Gravitational Lensing", "Parallax", "Redshift"],
+    "answer": "Retrograde Motion",
+    "explanation": "Retrograde motion is the apparent backward movement of a planet against the backdrop of stars, caused by the relative positions and movements of Earth and the other planet."
+},
+{
+    "question": "Which planet has the shortest day in the Solar System?",
+    "options": ["Mercury", "Earth", "Jupiter", "Neptune"],
+    "answer": "Jupiter",
+    "explanation": "Jupiter has the shortest day in the Solar System, with a rotation period of about 9.9 hours."
+},
+{
+    "question": "Which mission was the first to land a spacecraft on the surface of Mars?",
+    "options": ["Viking 1", "Mars Pathfinder", "Curiosity", "Sojourner"],
+    "answer": "Viking 1",
+    "explanation": "Viking 1 was the first successful mission to land on Mars, in 1976, and it provided the first clear images of the Martian surface."
+},
+{
+    "question": "What is the name of the largest volcano in the Solar System?",
+    "options": ["Mount Everest", "Olympus Mons", "Mauna Kea", "Elysium Mons"],
+    "answer": "Olympus Mons",
+    "explanation": "Olympus Mons on Mars is the largest volcano in the Solar System, standing at about 13.6 miles (22 kilometers) high."
+},
+{
+    "question": "Which planet has the coldest surface temperature in the Solar System?",
+    "options": ["Neptune", "Uranus", "Pluto", "Triton"],
+    "answer": "Uranus",
+    "explanation": "Uranus has the coldest planetary atmosphere in the Solar System, with minimum temperatures around -224°C."
+},
+{
+    "question": "What is the Kuiper Belt?",
+    "options": ["A region of asteroids between Mars and Jupiter", "A group of moons around Neptune", "A region of icy bodies beyond Neptune", "A collection of comets orbiting the Sun"],
+    "answer": "A region of icy bodies beyond Neptune",
+    "explanation": "The Kuiper Belt is a region beyond Neptune, filled with small icy bodies, including dwarf planets like Pluto."
+}
+
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const questionData = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = questionData.question;
+
+            const optionsContainer = document.querySelector('.options-container');
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(optionElement);
+            });
+
+            document.getElementById('feedback').style.display = 'none';
+            startTimer();
+
+            document.getElementById('completeBtn').style.display = currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+            document.getElementById('score').textContent = score;
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentQuestionIndex].answer;
+            const feedback = document.getElementById('feedback');
+            clearInterval(timer);
+
+            if (selectedOption === correctAnswer) {
+                score++;
+                feedback.innerHTML = `<p>Correct! ${questions[currentQuestionIndex].explanation}</p>`;
+            } else {
+                feedback.innerHTML = `<p>Wrong! The correct answer is <strong>${correctAnswer}</strong>. ${questions[currentQuestionIndex].explanation}</p>`;
+            }
+
+            feedback.style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function skipQuestion() {
+            nextQuestion();
+        }
+
+        function startTimer() {
+            let timeLeft = 10;
+            document.getElementById('timer').textContent = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function showResults() {
+            alert(`Quiz completed! Your score is: ${score}`);
+            // Redirect to score page or display results
+        }
+
+        document.getElementById('nextBtn').onclick = nextQuestion;
+        document.getElementById('skipBtn').onclick = skipQuestion;
+        document.getElementById('completeBtn').onclick = showResults;
+
+        loadQuestion();
+    </script>
+</body>
+</html>
